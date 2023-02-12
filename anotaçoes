@@ -1,0 +1,3 @@
+na funcion gameinstall, preciso resolver o problema da pergunta que o pacman faz ao usuario sobre driver
+
+na funcion yayinstall o makepkg -si não pode ser executando como root, precisar ser usuario normal.
