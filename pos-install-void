@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+#
+#-----------------------------------------------------------------
+# Contato -->
+#
+# Criando por Eduardo Silva, Email: eduardofox989@protonmail.com
+# 
+# Por Favor se estiver com qualquer problema
+# me envie um email ou reporte no github, Obrigado :D
+#
+#-----------------------------------------------------------------
+# Objetivo -->
+#
+# Eu sou uma pessoa que esta sempre mudando muito meu sistema Linux
+# e de vez em quanto eu acabo tento que formatar meu pc inteiro
+# então para facilitar minha vida criei esse script para automatizar
+# todo o meu pos instalação.
+#
+# Este Script tem a ideia de ser facil de usar e util para qualquer
+# pessoa que use Void linux, Com isso em mente eu criei Opçoes com 
+# Pacote de softwares, assim caso o usuario queria instalar por exemplo
+# apenas a minhas customizaçoes do terminal, ela seleciona e instalar 
+# apenas isso.
+#
+#-----------------------------------------------------------------
+# Variaveis de instalação ->
+menu=("games" "zsh" "flatpak" "Sair")
+#-----------------------------------------------------------------
+#
+# bloco de codigo para testar, se o usuario é Root, testando a internet e atualizado o sistema
+function test(){
+    #Teste de internet
+    echo "Testando sua Internet..."
+        sleep 2s
+            wget -q --spider www.google.com && echo "Internet OK..." || { echo "sem Internet, Verifique sua Rede [ERROR]" } ; exit 1 ;}
+    #atualizado o sistema
+    echo "Atualizado o sistema, Sera Necessario sua senha Root"
+        sleep 2s
+           sudo xbps-install -Syu 
+}
+
+
+# Bloco de Codigo para instalar o zsh e oh my zsh
+function zshinstall(){
+    sudo xbps-install -Su zsh
+    [[ $(type -p curl) ]] || { echo "Necessita do software 'CURL' para instalar o oh my zsh." ; exit 1;}
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
+# Bloco de codigo para instalar Steam e lutris
+function gameinstall(){
+    read -p "Gostaria de instalar STEAM ?? [S/n] " opcao
+        if [[ -z $opcao ]]; then
+            opcao="S"
+        fi
+
+        if [[ $opcao = "S" ]]; then
+            sudo xbps-install -S steam
+        fi
+
+    read -p "Gostaria de instalar Lutris ?? [S/n] " opcao
+        if [[ -z $opcao ]]; then
+            opcao="S"
+        fi
+        
+        if [[ $opcao = "S" ]]; then
+            sudo xbps-install -Su lutris 
+        fi 
+}
+
+# Bloco de codigo para instalar o flatpak e adicionar o flathub
+function flatinstall(){
+    sudo xbps-install -Su flatpak
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+}
+
+function dwminstall(){
+    mkdir ~/.config
+    mkdir ~/.config/suckless
+    cd ~/.config/suckless
+    git clone https://git.suckless.org/dwm
+    cd dwm
+    rm -rf config.def.h dwm.c
+    cp ../
+    git clone https://git.suckless.org/dmenu
+    git clone https://git.suckless.org/st
+    git clone https://git.suckless.org/slock
+    git clone https://github.com/torrinfail/dwmblocks.git
+    
+}
+
+
+
+# Menu de opções para o usuario
+select opt in "${menu[@]}"; do
+    case $opt in
+        "games")
+            echo "games" ;;
+        "zsh")
+            echo "zsh" ;;
+        "flatpak") 
+            flatinstall ;;
+        "Sair")
+            break ;;
+        *) echo "opcão invalida";;
+    esac
+done

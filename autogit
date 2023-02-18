@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+dirtemp="~/autogitTEMP"
+dirorgin="~/.config/suckless/"
+gitorigin="~/.config/Suckless/.git"
+
+if [[ -d $dirtemp ]];then 
+    rm -rf ~/autogitTEMP
+    echo "removendo o antigo $dirtemp"
+    cp -r $dirorgin $dirtemp || echo 'error'
+    echo "copiando a pasta original"
+    cp -r $gitorigin $dirtemp    
+else 
+    cp -r $dirorgin $dirtemp
+    echo "copiando a pasta original"
+    cp -r $gitorigin $dirtemp
+    echo 'copiando .git'
+fi
+
+cd ~/autogitTEMP/suckless && echo 'entrando no ambiente'
+
+git add . && echo 'git add com sucesso'
+read -p 'escreva um comentario: ' comp
+git commit -m "$comp" && echo 'commit feito com sucesso' 
+git push -u origin main && echo 'push feito com sucesso' && cd ~ && echo "mudando para home do $USER" && rm -rf ~/autogitTEMP && echo 'removendo gitTEMP' 
+
+echo 'fim do programa'
+

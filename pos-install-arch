@@ -42,24 +42,24 @@ function test(){
 # Bloco de codigo para instalar o aur Paru ou Yay
 function aurinstall(){
     read -p "Qual AUR Helper você gostaria de instalar ? [Yay/Paru] " opcao
-        if ((opcao == "Yay")); then
+        if [[ $opcao == "Yay" ]]; then
             sudo pacman -S --needed base-devel --noconfirm
             git clone https://aur.archlinux.org/paru.git
             cd paru
             makepkg -si
-        elif ((opcao == "Paru")); then
+      elif [[ $opcao == "Paru" ]]; then
             sudo pacman -S --needed git base-devel --noconfirm
             git clone https://aur.archlinux.org/yay.git
             cd yay
             makepkg -si
-        else echo "opção incorreta saindo... [ERROR]" ; exit 1
-        fi
+      else echo "opção incorreta saindo... [ERROR]" ; exit 1
+      fi
 }
 
 # Bloco de Codigo para instalar o zsh e oh my zsh
 function zshinstall(){
     sudo pacman -S zsh --noconfirm
-    [[ $(type -p curla) ]] || { echo "Necessita do software 'CURL' para instalar o oh my zsh." ; exit 1;}
+    [[ $(type -p curl) ]] || { echo "Necessita do software 'CURL' para instalar o oh my zsh." ; exit 1;}
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
@@ -69,14 +69,16 @@ function gameinstall(){
         if [[ -z $opcao ]]; then
             opcao="S"
         fi
-        echo 
+
         if [[ $opcao = "S" ]]; then
             sudo pacman -S steam --noconfirm
         fi
+
     read -p "Gostaria de instalar Lutris ?? [S/n] " opcao
         if [[ -z $opcao ]]; then
             opcao="S"
         fi
+        
         if [[ $opcao = "S" ]]; then
             sudo pacman -S lutris --noconfirm
         fi 
